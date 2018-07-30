@@ -1,0 +1,310 @@
+<html>
+<head>
+    <title>Documentation for FMU SDK 2.0.6</title>
+<style type="text/css">
+  html { font-family: Verdana, Arial, Helvetica, sans-serif; }
+  h1,h2,h3  { color: #000066; }
+</style>
+</head>
+<body>
+  <h1>FMU SDK 2.0.6</h1>
+  The FMU SDK is a free software development kit provided by
+    <a href="http://www.qtronic.de" target="_blank">QTronic</a>.
+    The FMU SDK demonstrates basic use of Functional Mockup Units (FMUs)
+    as defined by the following specifications
+    <ul>
+    <li>Functional Mock-up Interface for <a href=
+    "https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf"
+    target="_blank">Model Exchange and Co-Simulation 2.0</a> (July 25, 2014)</li>
+    <li>Functional Mock-up Interface for <a href=
+    "https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_ModelExchange_v1.0.pdf"
+    target="_blank">Model Exchange 1.0</a> (January 26, 2010)</li>
+    <li>Functional Mock-up Interface for <a href=
+    "https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_CoSimulation_v1.0.pdf"
+    target="_blank">Co-Simulation 1.0</a> (October 12, 2010)</li>
+    </ul>
+    The FMI specifications are available from 
+    <a href="http://fmi-standard.org/downloads" target="_blank">here</a>.
+    A short overview on FMUs and the FMI specification can be found
+    <a href="http://www.qtronic.de/doc/fmi_overview.pdf" target="_blank">here</a>.
+    The FMU SDK can also serve as starting point for developing applications 
+    that create or process FMUs.
+    <p>
+    For each of the supported FMI versions (currently 1.0 and 2.0), 
+    the FMU SDK contains the C sources for various discrete and continuous 
+    FMU models, a batch file for compiling and zip'ing these models, 
+    an XML parser for parsing the model description of an FMU and two simple 
+    simulation programs that run a given FMU and output the result as CSV file.
+    <p>
+    The FMU SDK 2.0.6 can be downloaded from 
+    <a href="http://www.qtronic.de/doc/fmusdk.zip">
+        http://www.qtronic.de/doc/fmusdk.zip</a>. 
+    For bug reports, questions or comments regarding the FMU SDK, please
+    mail to <a href="mailto:fmu@qtronic.de">fmu@qtronic.de</a>.
+    Questions or comments regarding the FMU specification should be sent to 
+    <a href="mailto:info@functional-mockup-interface.org">info@functional-mockup-interface.org</a>.
+    <img src="fmus.jpg">
+
+    <hr />
+
+<h2>Table of Contents</h2>
+<ul>
+    <li><a href="#installation">Building and Installing the FMU SDK</a></li>
+    <li><a href="#simulation">Simulating an FMU</a></li>
+    <li><a href="#creating_fmus">Creating your own FMUs</a></li>
+    <li><a href="#revisions">FMU SDK Revision history</a></li>
+    <li><a href="#license">License conditions</a></li>
+</ul>
+
+<hr />
+<h2><a name="installation">Installing the FMU SDK</a></h2>
+The FMU SDK runs on all 32 bit and 64 bit Windows platforms, Linux and Mac OS X platforms.
+Download the FMU SDK from <a href="http://www.qtronic.de/doc/fmusdk.zip">here</a>,
+and unzip the file in a directory where you have write access. 
+That directory is called FMUSDK_HOME below and may contain white space, such as in "C:\Program Files\fmusdk". 
+The FMU SDK contains only the C sources of the FMUs and the simulators, not the executables, 
+and should compile on all Windows, Linux and Mac OS X platforms.
+<p/>
+To build Windows 32 bit versions of all FMUs and simulators of the FMU SDK, 
+double click on FMUSDK_HOME\install.bat.
+This should create fmus in FMUSDK_HOME\fmu10\fmu and FMUSDK_HOME\fmu20\fmu, as well as four
+simulators in FMUSDK_HOME\fmu10\bin and FMUSDK_HOME\fmu20\bin. 
+<p/>
+To build Windows 64 bit versions of all FMUs and simulators, open a command shell and run "install -win64".
+This creates additional fmus in the x64 subdirectories in FMUSDK_HOME\fmu10\fmu and FMUSDK_HOME\fmu20\fmu, as well
+as additional simulators in FMUSDK_HOME\fmu10\bin\x64 and FMUSDK_HOME\fmu20\bin\x64. Building these 64 bit versions works also on 32 bit 
+Windows platforms. Execution of the 64 bit simulators and fmus requires however a 64 bit version of Windows.
+<p/>
+Compilation using install.bat requires that you have installed one of
+Microsoft Visual Studio 2005 (VS8), 2008 (VS9), 2010 (VS10), 2012 (VS11), 2013 (VS12) or 2015 (VS14),
+for example the free Express Edition.
+To compile with another compiler, adapt the batch files.
+<p/>
+To build Linux or Mac OS X binaries of all FMUs and simulators, open command shell and run "make".
+The build requires that you have installed the C and C++ compilers, libexpat and libxml2 libraries.
+To install these dependencies on Linux you can use a package manager like 
+"sudo apt install g++", "sudo apt install libexpat1-dev", "sudo apt install libxml2-dev".
+
+<hr />
+<h2><a name="simulation">Simulating an FMU</a></h2>
+On Windows, to run a given FMU with one of the FMU simulators, open a command shell in 
+directory FMUSDK_HOME and run the command fmusim
+<pre>
+fmusim simulator model.fmu [tEnd [h [loggingOn [csvSeparator]]]] [-win64]
+  simulator ..... cs10 or cs20 for co-simulation, me10 or me20 for model exchange, required
+  model.fmu ..... path to FMU, relative to current dir or absolute, required
+  tEnd .......... end  time of simulation, optional, defaults to 1.0 sec
+  h ............. step size of simulation, optional, defaults to 0.1 sec
+  loggingOn ..... 1 to activate logging,   optional, defaults to 0
+  csvSeparator .. c for comma, s for semicolon, optional, defaults to c
+  -win64 ........ to use a 64 bit simulator. By default, the 32 bit version is used
+</pre>
+This unzips the given FMU, parses the contained modelDescription.xml file, simulates
+the FMU from t=0 to t=tEnd, and writes the solution to file 'result.csv'. The file
+is written in CSV format (comma-separated values), using ';' to separate columns and
+using ',' instead of '.' as decimal dot to print floating-point numbers.
+To change the result file format, use the 'csv separator' option.
+The logging option activates logging of the simulated FMU. The FMI specification does
+not specify, what exactly to log in this case. However, when logging is switched on,
+the sample FMUs of the FMU SDK log every single FMU function call. Moreover, the
+fmusim simulators log every step and every event that is detected.
+<p/>
+Example command:
+<pre>
+&gt; fmusim me10 fmu10/fmu/me/bouncingBall.fmu 5 0.1 0 s
+FMU Simulator: run 'fmu/bouncingBall.fmu' from t=0..5 with step size h=0.1, loggingOn=0, csv separator=';'
+Simulation from 0 to 5 terminated successful
+  steps ............ 51
+  fixed step size .. 0.1
+  time events ...... 0
+  state events ..... 14
+  step events ...... 0
+CSV file 'result.csv' written
+</pre>
+On Linux and Mac OS X get inspired by <code>run_all</code> target inside FMUSDK_HOME\makefile.
+</p>
+To plot the result file, open it e.g. in a spread-sheet program, such as Miscrosoft Excel or OpenOffice Calc.
+The figure below shows the result of the above simulation when plotted using OpenOffice Calc 3.0.
+Note that the height h of the bouncing ball as computed by fmusim becomes negative at the contact points, 
+while the true solution of the FMU does actually not contain negative height values. 
+This is not a limitation of the FMU, but of fmusim_me, which does not attempt to locate the 
+exact time of state events. 
+To improve this, either reduce the step size or add your own procedure for state-event location to fmusim_me.
+<p/>
+<img src="bouncingBallCalc.png">
+
+<hr />
+<h2><a name="creating_fmus">Creating your own FMUs</a></h2>
+The FMU SDK contains a few sample FMUs
+<ul>
+    <li><a href="../fmu20/src/models/dq/index.html">dq</a> the Dahlquist test function x = -k der(x)</li>
+    <li><a href="../fmu20/src/models/inc/index.html">inc</a> increments an integer counter every second</li>
+    <li><a href="../fmu20/src/models/values/index.html">values</a> demonstrates the use of all scalar FMU data types</li>
+    <li><a href="../fmu20/src/models/vanDerPol/index.html">vanDerPol</a> ODE with 2 continuous states</li>
+    <li><a href="../fmu20/src/models/bouncingBall/index.html">bouncingBall</a> a bouncing ball that defines state events</li>
+</ul>
+To implement your own FMU using the FMU SDK, create a directory - say xy - in FMUSDK_HOME\fmu10\src\models, 
+or FMUSDK_HOME\fmu20\src\models, and create files xy.c there.
+The name of the new directory and of the .c file must be the same. 
+The content of the .c file should follow the existing FMU examples, see the comments in the example code. 
+For FMI 1.0, add also file modelDescription.xml.
+The XML file must not contain the <code>&lt;implementation&gt;</code>
+element and the closing <code>&lt;fmiModelDescription&gt;</code> tag, because this is added automatically during build. 
+For FMI 2.0, add file modelDescription_cs.xml and modelDescription_me.xml.
+When done with editing xy.c and the xml file (or files), open a command shell in FMUSDK_HOME\fmu10\src\models 
+or in FMUSDK_HOME\fmu20\src\models to run the build command.
+</p>
+On Windows, run command <code>build_fmu me xy</code> to build an FMU for model-exchange, or
+<code>build_fmu cs xy</code> to build an FMU for co-simulation. 
+This should create a 32 bit FMU file xy.fmu in the corresponding subdirectory of FMUSDK_HOME\fmu10 or FMUSDK_HOME\fmu20.
+To build a 64-bit FMU, append option -win64 to the build command.
+<p/>
+For Linux and Mac OS X get inspired by <code>all</code> target inside FMUSDK_HOME\fmu10\src\models\makefile and FMUSDK_HOME\fmu20\src\models\makefile.
+</p>
+The figure below might help to create or process the XML file modelDescription.xml. 
+It shows all XML elements (without attributes) used in the schema files (XSD) for 
+model exchange and co-simulation 1.0. Notation: UML class diagram.
+<img src="fmu10-xml-schema.png">
+<br/>
+For the case of FMU 2.0, see the corresponding overview figure in the
+<a href="https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf"
+target="_blank">FMI specification 2.0</a>.
+<hr />
+
+<h2><a name="revisions">FMU SDK Revision history</a></h2>
+<ul>
+<li>07.02.2010, Version 1.0
+    <ul>
+    <li>First release</li>
+    <li>demo FMI for Model Exchange 1.0</li>
+    </ul>
+</li>
+<li>05.03.2010, Version 1.0.1
+    <ul>
+    <li>demo FMI for Model Exchange 1.0</li>
+    <li>bug-fix in fmuTemplate.c: fmiSetString now copies the passed
+       string argument and fmiFreeModelInstance frees all string copies
+    </li> 
+    <li>fmusim/main.c: removed strerror(GetLastError()) from error messages
+    </li>
+    </ul>
+</li>
+<li>22.08.2011, Version 1.0.2
+    <ul>
+    <li>demo FMI for Model Exchange 1.0 and FMI for Co-Simulation 1.0</li>
+    <li>added support for FMI for Co-Simulation 1.0 (standalone, no tool coupling)</li>
+    <li>bug-fix in fmusim/main.c: added missing calls to fmiTerminate and fmiFreeModelInstance</li> 
+    </ul>
+</li>
+<li>07.03.2014, Version 2.0.0
+    <ul>
+    <li>demo FMI for versions 1.0 and 2.0 RC1</li>
+    <li>added support for FMI 2.0 RC1</li>
+    <li>added 64 bit support</li>
+    <li>more compilers recognized by the installer</li>
+    </ul>
+</li>
+<li>16.04.2014, Version 2.0.1
+    <ul>
+        <li>bug-fix in modelDescription.xml files: remove alias parameter, add derivative attribute to suitable variables</li>
+        <li>bug-fix in fmu20/fmuTemplate.c: allow modules to request termination of simulation, better time event
+            handling, initialize() moved from fmiEnterInitialization to fmiExitInitialization, correct logging message
+            format in fmiDoStep</li>
+        <li>bug-fix in Co-Simulation and Model Exchange simulators: set fmu location for 1.0 and fmu resources location
+            for 2.0 at instantiation of model</li>
+    </ul>
+</li>
+<li>02.07.2014, Version 2.0.2
+    <ul>
+        <li>added support for FMI 2.0 RC2</li>
+        <li>remove support for exporting FMI 2.0 RC1. Co-Simulation and Model Exchange simulators still support FMI 2.0 RC1</li>
+        <li>fmi2setDebugLogging called with 0 categories, set all categories to loggingOn value</li>
+    </ul>
+</li>
+<li>27.08.2014, Version 2.0.3
+    <ul>
+        <li>track all states of Model-exchange and Co-simulation and check the allowed calling sequences for FMI 2.0</li>
+        <li>added explicit 'isTimeEvent' parameter for eventUpdate function in the user's models</li>
+        <li>lazy computation of computed values</li>
+        <li>bug-fix in modelDescription.xml: set initial attribute to local and output variables,
+        add unknown variables in &lt;ModelStructure&gt;&lt;InitialUnknowns&gt; section</li>
+    </ul>
+</li>
+<li>20.10.2015, Version 2.0.4
+    <ul>
+        <li>added explicit 'isNewEventIteration' parameter for eventUpdate function in the user's models</li>
+        <li>bouncingBall example improvement: demonstrate tunable parameters, avoid 'fall through effect' due to numerical calculation</li>
+        <li>bug-fix: allow to declare real variables and zero states in a model</li>
+        <li>bug-fix: allow to simulate FMI 2.0 RC1 models</li>
+        <li>bug-fix: remove memory leaks and compilation warnings</li>
+    </ul>
+</li>
+<li>8.12.2017, Version 2.0.5
+    <ul>
+        <li>added support for Linux and Mac OS X. Thanks to Christopher Brooks (https://github.com/cxbrooks)</li>
+        <li>added support for building with Microsoft VS 2015</li>
+        <li>location of simulators changes to FMUSDK_HOME\fmu10\bin and FMUSDK_HOME\fmu20\bin instead of FMUSDK_HOME\bin</li>
+        <li>fmu20 build define DISABLE_PREFIX to not use prefixed FMI functions</li>
+        <li>fmu20 models declare source files in ModelDescription.xml</li>
+        <li>log error messages regardless of loggingOn flag when functions return fmi2Error</li>
+        <li>bug-fix: allow to declare real variables and zero states</li>
+    </ul>
+</li>
+<li>20.07.2018, Version 2.0.6
+    <ul>
+        <li>update libxml2.lib to work for windows 7 and Visual Studio 2013 and 2015</li>
+        <li>linux - give exec right to build_fmu.sh before executing it</li>
+        <li>copy .h model files with rsync to avoid missing file error</li>
+    </ul>
+</li>
+</ul>
+
+<h2><a name="license">License conditions</a></h2>
+The FMU SDK is provided by QTronic under the
+<a href="http://www.opensource.org/licenses/bsd-license.html">BSD License</a>.
+<hr/>
+<pre>
+FMU SDK license 
+
+Copyright © 2008-2018, QTronic GmbH. All rights reserved.
+The FmuSdk is licensed by the copyright holder under the BSD License
+(http://www.opensource.org/licenses/bsd-license.html):
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright notice,
+  this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY QTRONIC GMBH "AS IS" AND ANY EXPRESS OR 
+IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL QTRONIC GMBH BE LIABLE FOR ANY DIRECT, INDIRECT, 
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY 
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre>
+<hr/>
+
+The following additional tools are distributed with the FMU SDK under their 
+respective licenses
+<ul>
+    <li><a href="http://www.7-zip.org" target="_blank">7z 4.57</a> 
+     by Igor Pavlov. Used here to zip and unzip FMUs, 
+     license is <a href="../bin/license.txt">here</a>.</li>
+    <li><a href="http://sourceforge.net/projects/expat/" target="_blank">eXpat 2.0.1</a> 
+     by James Clark. Used here to parse the modelDescription.xml file of an FMU 1.0,  
+     license is <a href="../fmu10/src/shared/COPYING.txt">here</a>.</li> 
+     <li><a href="http://xmlsoft.org" target="_blank">libxml</a>,
+     the XML C parser and toolkit of Gnome.
+     Used here to parse the modelDescription.xml file of an FMU 2.0,
+     license is <a href="../fmu20/src/shared/parser/libxml_license.txt">here</a>.</li>  
+</ul>
+<hr />
+
+</body>
+</html>
