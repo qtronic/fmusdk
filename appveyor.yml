@@ -1,0 +1,16 @@
+clone_folder: c:\projects\fmusdk
+
+image:
+  - Visual Studio 2015
+
+before_build:
+  - cmd: |-
+      mkdir build
+      cd build
+      cmake -G "Visual Studio 14 2015 Win64" ..
+
+build:
+  project: c:\projects\fmusdk\build\FMUSDK.sln
+
+artifacts:
+  - path: dist
