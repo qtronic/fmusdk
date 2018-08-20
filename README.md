@@ -1,4 +1,4 @@
-[![Travis CI](https://travis-ci.org/t-sommer/fmusdk.svg?branch=master)](https://travis-ci.org/t-sommer/fmusdk)
+[![Travis CI](https://travis-ci.org/qtronic/fmusdk.svg?branch=master)](https://travis-ci.org/qtronic/fmusdk)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/t-sommer/fmusdk?svg=true)](https://ci.appveyor.com/project/TorstenSommer/fmusdk)
 
 # FMU SDK
