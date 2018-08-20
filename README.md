@@ -1,5 +1,5 @@
 [![Travis CI](https://travis-ci.org/qtronic/fmusdk.svg?branch=master)](https://travis-ci.org/qtronic/fmusdk)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/t-sommer/fmusdk?svg=true)](https://ci.appveyor.com/project/TorstenSommer/fmusdk)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/bq2uvq0sm3w8v5u0?svg=true)](https://ci.appveyor.com/project/adriantirea/fmusdk)
 
 # FMU SDK
 
