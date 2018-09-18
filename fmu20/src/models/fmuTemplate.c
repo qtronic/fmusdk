@@ -44,6 +44,10 @@ fmi2ValueReference vrStates[NUMBER_OF_STATES] = STATES;
 #define max(a,b) ((a)>(b) ? (a) : (b))
 #endif
 
+#ifndef DT_EVENT_DETECT
+#define DT_EVENT_DETECT 1e-10
+#endif
+
 // ---------------------------------------------------------------------------
 // Private helpers used below to validate function arguments
 // ---------------------------------------------------------------------------
@@ -663,7 +667,7 @@ fmi2Status fmi2DoStep(fmi2Component c, fmi2Real currentCommunicationPoint,
         }
 #endif
         // check for time event
-        if (comp->eventInfo.nextEventTimeDefined && ((comp->time - comp->eventInfo.nextEventTime) > -0.0000000001)) {
+        if (comp->eventInfo.nextEventTimeDefined && (comp->time - comp->eventInfo.nextEventTime > -DT_EVENT_DETECT)) {
             FILTERED_LOG(comp, fmi2OK, LOG_EVENT, "fmi2DoStep: time event detected at %g", comp->time)
             timeEvent = 1;
         }
