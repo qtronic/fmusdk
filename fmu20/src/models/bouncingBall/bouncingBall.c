@@ -111,7 +111,6 @@ void eventUpdate(ModelInstance *comp, fmi2EventInfo *eventInfo, int isTimeEvent,
     
 	if (!pos(0)) {
 
-		// height is negative
         fmi2Real tempV = - r(e_) * prevV;
 
         if (r(v_) != tempV) {
