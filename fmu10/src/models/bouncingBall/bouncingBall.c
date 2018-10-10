@@ -89,15 +89,27 @@ fmiReal getEventIndicator(ModelInstance* comp, int z) {
 
 // Used to set the next time event, if any.
 void eventUpdate(ModelInstance* comp, fmiEventInfo* eventInfo) {
-    if (pos(0)) {
-        r(v_) = - r(e_) * r(v_);
-    }
-    pos(0) = r(h_) > 0;
-    eventInfo->iterationConverged  = fmiTrue;
-    eventInfo->stateValueReferencesChanged = fmiFalse;
-    eventInfo->stateValuesChanged  = fmiTrue;
-    eventInfo->terminateSimulation = fmiFalse;
-    eventInfo->upcomingTimeEvent   = fmiFalse;
+
+	eventInfo->iterationConverged = fmiTrue;
+	eventInfo->stateValueReferencesChanged = fmiFalse;
+	eventInfo->stateValuesChanged = fmiFalse;
+	eventInfo->terminateSimulation = fmiFalse;
+	eventInfo->upcomingTimeEvent = fmiFalse;
+
+	pos(0) = r(h_) > 0;
+	
+	if (!pos(0)) {
+
+		r(h_) = 0;
+		r(v_) = - r(e_) * r(v_);
+
+		// avoid fall-through effect. The ball will not jump high enough, so v and der_v is set to 0 at this surface impact.
+		if (r(v_) < 1e-3) {
+			r(der_v_) = 0;  // turn off gravity.
+		}
+
+		eventInfo->stateValuesChanged = fmiTrue;
+	}
  }
 
 // include code that implements the FMI based on the above definitions

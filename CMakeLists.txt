@@ -35,6 +35,10 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYP
 
 target_compile_definitions(${TARGET_NAME} PRIVATE DISABLE_PREFIX)
 
+if (${FMI_TYPE} MATCHES "cs")
+  target_compile_definitions(${TARGET_NAME} PRIVATE FMI_COSIMULATION)
+endif()
+
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/models")
 
 if (${FMI_VERSION} EQUAL 10)
@@ -45,10 +49,6 @@ if (${FMI_VERSION} EQUAL 10)
   endif ()
 else ()
   target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu20/src/shared/include")
-endif()
-
-if (${FMI_TYPE} MATCHES "cs")
-  set_target_properties(${TARGET_NAME} PROPERTIES COMPILE_DEFINITIONS "FMI_COSIMULATION")
 endif()
 
 set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmi${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME})

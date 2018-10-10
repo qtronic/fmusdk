@@ -96,25 +96,36 @@ fmi2Real prevV;
 
 // used to set the next time event, if any.
 void eventUpdate(ModelInstance *comp, fmi2EventInfo *eventInfo, int isTimeEvent, int isNewEventIteration) {
-    if (isNewEventIteration) {
+
+	eventInfo->newDiscreteStatesNeeded = fmi2False;
+	eventInfo->terminateSimulation = fmi2False;
+	eventInfo->nominalsOfContinuousStatesChanged = fmi2False;
+	eventInfo->valuesOfContinuousStatesChanged = fmi2False;
+	eventInfo->nextEventTimeDefined = fmi2False;
+
+	if (isNewEventIteration) {
         prevV = r(v_);
     }
-    pos(0) = r(h_) > 0;
-    if (!pos(0)) {
+    
+	pos(0) = r(h_) > 0;
+    
+	if (!pos(0)) {
+
+		// height is negative
         fmi2Real tempV = - r(e_) * prevV;
+
         if (r(v_) != tempV) {
+			r(h_) = 0;
             r(v_) = tempV;
             eventInfo->valuesOfContinuousStatesChanged = fmi2True;
         }
+
         // avoid fall-through effect. The ball will not jump high enough, so v and der_v is set to 0 at this surface impact.
         if (r(v_) < 1e-3) {
             r(v_) = 0;
             r(der_v_) = 0;  // turn off gravity.
         }
     }
-    eventInfo->nominalsOfContinuousStatesChanged = fmi2False;
-    eventInfo->terminateSimulation   = fmi2False;
-    eventInfo->nextEventTimeDefined  = fmi2False;
 }
 
 // include code that implements the FMI based on the above definitions
