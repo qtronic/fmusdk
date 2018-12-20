@@ -35,6 +35,10 @@ MODEL_EXCHANGE_DEPS = \
 
 # Dependencies shared between both fmusim_cs and fmusim_me
 SHARED_DEPS = \
+	shared/sim_support.c \
+	shared/sim_support.h \
+	shared/xmlVersionParser.c \
+	shared/xmlVersionParser.h \
 	shared/fmi2.h \
 	shared/include/fmi2Functions.h \
 	shared/include/fmi2FunctionTypes.h \
@@ -42,9 +46,7 @@ SHARED_DEPS = \
 	shared/parser/fmu20/XmlElement.h \
 	shared/parser/fmu20/XmlParser.h \
 	shared/parser/fmu20/XmlParserException.h \
-	shared/parser/XmlParserCApi.h \
-	shared/xmlVersionParser.c \
-	shared/xmlVersionParser.h
+	shared/parser/XmlParserCApi.h
 
 # Set CFLAGS to -m32 to build for linux32
 #CFLAGS=-m32
@@ -69,12 +71,12 @@ fmusim_cs: $(CO_SIMULATION_DEPS) $(SHARED_DEPS) ../bin/
 fmusim_me: $(MODEL_EXCHANGE_DEPS) $(SHARED_DEPS) ../bin/
 	$(CC) $(CFLAGS) -g -Wall \
 		-DSTANDALONE_XML_PARSER -DLIBXML_STATIC \
-		-Ishared/include -Ishared/parser/libxml -Ishared/parser -Ishared \
+		-Ishared/include -Ishared/parser -Ishared \
 		model_exchange/main.c $(SHARED_SRCS) \
 		-c
 	$(CXX) $(CFLAGS) -g -Wall \
 		-DSTANDALONE_XML_PARSER -DLIBXML_STATIC \
-		-Ishared/include -Ishared/parser/libxml -Ishared/parser -Ishared \
+		-Ishared/include -Ishared/parser -Ishared \
 		main.o sim_support.o xmlVersionParser.o $(CPP_SRCS) \
 		-o $@ -ldl -lxml2
 	cp fmusim_me ../bin/

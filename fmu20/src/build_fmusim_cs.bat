@@ -17,11 +17,11 @@ if defined INCLUDE set PREV_INCLUDE=%INLUDE%
 if defined LIB     set PREV_LIB=%LIB%
 if defined LIBPATH set PREV_LIBPATH=%LIBPATH%
 
-if "%1"=="-win64" (set x64=x64\) else set x64=
+if "%1"=="-win64" (set FMI_PLATFORM=win64) else (set FMI_PLATFORM=win32)
+if not exist ..\bin\%FMI_PLATFORM% mkdir ..\bin\%FMI_PLATFORM%
 
 rem setup the compiler
-if defined x64 (
-if not exist ..\bin\x64 mkdir ..\bin\x64
+if %FMI_PLATFORM%==win64 (
 if defined VS140COMNTOOLS (call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
 if defined VS120COMNTOOLS (call "%VS120COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
 if defined VS110COMNTOOLS (call "%VS110COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
@@ -45,11 +45,11 @@ set OPTIONS=/DFMI_COSIMULATION /nologo /EHsc /DSTANDALONE_XML_PARSER /DLIBXML_ST
 
 rem create fmusim_cs.exe in co_simulation dir
 pushd co_simulation
-cl %SRC% %INC% %OPTIONS% /Fefmusim_cs.exe /link /LIBPATH:..\shared\parser\%x64%
+cl %SRC% %INC% %OPTIONS% /Fefmusim_cs.exe /link /LIBPATH:..\shared\parser\%FMI_PLATFORM%
 del *.obj
 popd
 if not exist co_simulation\fmusim_cs.exe goto compileError
-move /Y co_simulation\fmusim_cs.exe ..\bin\%x64%
+move /Y co_simulation\fmusim_cs.exe ..\bin\%FMI_PLATFORM%
 goto done
 
 :noCompiler

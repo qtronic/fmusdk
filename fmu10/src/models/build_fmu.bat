@@ -18,10 +18,10 @@ if defined INCLUDE set PREV_INCLUDE=%INLUDE%
 if defined LIB     set PREV_LIB=%LIB%
 if defined LIBPATH set PREV_LIBPATH=%LIBPATH%
 
-if "%3"=="-win64" (set x64=x64\) else set x64=
+if "%3"=="-win64" (set FMI_PLATFORM=win64) else (set FMI_PLATFORM=win32)
 
 rem setup the compiler
-if defined x64 (
+if %FMI_PLATFORM%==win64 (
 if defined VS140COMNTOOLS (call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
 if defined VS120COMNTOOLS (call "%VS120COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
 if defined VS110COMNTOOLS (call "%VS110COMNTOOLS%\..\..\VC\vcvarsall.bat" x86_amd64) else ^
@@ -44,13 +44,12 @@ if not exist temp mkdir temp
 pushd temp
 if exist *.dll del /Q *.dll
 
-if %1==cs (set FMI_DIR=co_simulation) else set FMI_DIR=model_exchange
 if %1==cs (set DEF=/DFMI_COSIMULATION) else set DEF=
-cl /LD /nologo %DEF% ..\%2\%2.c /I ..\. /I ..\..\%FMI_DIR%\include
+cl /LD /nologo %DEF% ..\%2\%2.c /I ..\. /I ..\..\shared\include
 if not exist %2.dll goto compileError
 
 rem create FMU dir structure with root 'fmu'
-if defined x64 (set BIN_DIR=fmu\binaries\win64) else set BIN_DIR=fmu\binaries\win32
+set BIN_DIR=fmu\binaries\%FMI_PLATFORM%
 set SRC_DIR=fmu\sources
 set DOC_DIR=fmu\documentation
 if not exist %BIN_DIR% mkdir %BIN_DIR%
@@ -69,7 +68,7 @@ del %DOC_DIR%\model.png
 
 rem zip the directory tree and move to fmu directory 
 cd fmu
-set FMU_FILE=..\..\..\..\fmu\%1\%x64%%2.fmu
+set FMU_FILE=..\..\..\..\fmu\%1\%FMI_PLATFORM%\%2.fmu
 if exist %FMU_FILE% del %FMU_FILE%
 ..\..\..\..\bin\7z.exe a -tzip %FMU_FILE% ^
   modelDescription.xml model.png binaries sources documentation

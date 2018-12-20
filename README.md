@@ -38,6 +38,7 @@ On Mac and Linux enter
 
 ```
 mkdir build
+cd build
 cmake -G "Unix Makefiles" ..
 make
 ```
@@ -46,6 +47,7 @@ on Windows enter
 
 ```
 mkdir build
+cd build
 cmake -G "Visual Studio 14 2015 Win64" ..
 msbuild FMUSDK.sln
 ```
