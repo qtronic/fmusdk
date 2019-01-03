@@ -146,6 +146,7 @@ target_compile_definitions(${TARGET_NAME} PRIVATE STANDALONE_XML_PARSER)
 target_compile_definitions(${TARGET_NAME} PRIVATE LIBXML_STATIC)
 
 if (WIN32)
+  set(TARGET_OUTPUT_NAME, "${TARGET_NAME}.exe")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
   set(CMAKE_C_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
@@ -156,6 +157,7 @@ if (WIN32)
     target_link_libraries (${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/shared/parser/${FMI_PLATFORM}/libexpatMT.lib")
   endif ()
 else ()
+  set(TARGET_OUTPUT_NAME, "${TARGET_NAME}")
   target_link_libraries (${TARGET_NAME} PRIVATE "xml2")
   target_link_libraries (${TARGET_NAME} PRIVATE "expat")
 endif ()
@@ -176,7 +178,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 )
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-  "${FMU_BUILD_DIR}/${TARGET_NAME}*"
+  "${FMU_BUILD_DIR}/${TARGET_OUTPUT_NAME}"
   "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE}/"
 )
 
