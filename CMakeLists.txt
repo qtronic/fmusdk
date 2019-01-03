@@ -176,7 +176,7 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 )
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
-  "${FMU_BUILD_DIR}/${TARGET_NAME}.exe"
+  "${FMU_BUILD_DIR}/${TARGET_NAME}*"
   "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE}/"
 )
 
