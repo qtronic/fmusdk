@@ -32,7 +32,7 @@ set(TARGET_NAME ${MODEL_NAME}_${FMI_VERSION}_${FMI_TYPE})
 
 add_library(${TARGET_NAME} SHARED fmu${FMI_VERSION}/src/models/${MODEL_NAME}/${MODEL_NAME}.c fmu${FMI_VERSION}/src/models/${MODEL_NAME}/modelDescription_${FMI_TYPE}.xml)
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE})
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE})
 
 target_compile_definitions(${TARGET_NAME} PRIVATE DISABLE_PREFIX)
 
@@ -43,7 +43,7 @@ endif()
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/models")
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/shared/include")
 
-set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmi${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME})
+set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmu${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME})
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         "${FMU_BUILD_DIR}/binaries/${FMI_PLATFORM}"
@@ -83,7 +83,7 @@ add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E 
 )
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME}.fmu" --format=zip
+  COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME}.fmu" --format=zip
   "modelDescription.xml"
   "binaries"
   "sources"
@@ -122,7 +122,7 @@ endif ()
 
 add_executable(${TARGET_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/${SIM_TYPE}/main.c" ${SRCS})
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE})
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE})
 
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/${SIM_TYPE}")
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/fmu${FMI_VERSION}/src/shared")
@@ -154,7 +154,7 @@ else ()
 endif ()
 
 
-set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmi${FMI_VERSION}/${FMI_TYPE})
+set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmu${FMI_VERSION}/${FMI_TYPE})
 
 set_target_properties(${TARGET_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY         "${FMU_BUILD_DIR}"
@@ -170,8 +170,29 @@ set_target_properties(${TARGET_NAME} PROPERTIES
 
 add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy
   "${FMU_BUILD_DIR}/${TARGET_OUTPUT_NAME}"
-  "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE}/"
+  "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE}/"
 )
 
 endforeach(FMI_TYPE)
 endforeach(FMI_VERSION)
+
+# --------------------- test simulators and models ---------------------
+enable_testing()
+foreach (FMI_VERSION 10 20)
+foreach (FMI_TYPE cs me)
+foreach (MODEL_NAME bouncingBall dq inc values vanDerPol)
+
+set(FMU_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/temp/fmu${FMI_VERSION}/${FMI_TYPE})
+set(TEST_NAME test_${MODEL_NAME}_${FMI_VERSION}_${FMI_TYPE})
+
+add_test(NAME ${TEST_NAME}
+	COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE}/fmusim_${FMI_VERSION}_${FMI_TYPE}"
+			"${CMAKE_CURRENT_SOURCE_DIR}/dist/fmu${FMI_VERSION}/${FMI_TYPE}/${MODEL_NAME}.fmu"
+	WORKING_DIRECTORY "${FMU_BUILD_DIR}/${MODEL_NAME}"
+)
+set_tests_properties(${TEST_NAME} PROPERTIES ENVIRONMENT FMUSDK_HOME=${CMAKE_CURRENT_SOURCE_DIR})
+ 
+endforeach(MODEL_NAME)
+endforeach(FMI_TYPE)
+endforeach(FMI_VERSION)
+
