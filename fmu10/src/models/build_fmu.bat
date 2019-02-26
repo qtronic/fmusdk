@@ -58,7 +58,7 @@ if not exist %DOC_DIR% mkdir %DOC_DIR%
 move /Y %2.dll %BIN_DIR%
 if exist ..\%2\*~ del /Q ..\%2\*~
 copy ..\%2\%2.c %SRC_DIR%
-type ..\%2\modelDescription.xml ..\%1.xml > fmu\modelDescription.xml
+copy ..\%2\modelDescription_%1.xml fmu\modelDescription.xml
 copy ..\%2\model.png fmu
 copy ..\fmuTemplate.c %SRC_DIR%
 copy ..\fmuTemplate.h %SRC_DIR%

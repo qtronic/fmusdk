@@ -53,7 +53,7 @@ all:
 	-cp *.c fmu/sources
 	rsync -av --ignore-missing-args ./*.h ./fmu/sources
 	-cp *.html *.png fmu/documentation
-	cat modelDescription.xml ../$(CSORME).xml > fmu/modelDescription.xml
+	cp modelDescription_$(CSORME).xml fmu/modelDescription.xml
 	cp model.png fmu
 	@if [ ! -d ../../../fmu/$(CSORME) ]; then \
 		echo "mkdir -p ../../../fmu/$(CSORME)"; \
