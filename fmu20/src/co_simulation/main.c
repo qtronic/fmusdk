@@ -50,7 +50,7 @@ static int simulate(FMU* fmu, double tEnd, double h, fmi2Boolean loggingOn, char
     ModelDescription* md;                      // handle to the parsed XML file
     fmi2Boolean toleranceDefined = fmi2False;  // true if model description define tolerance
     fmi2Real tolerance = 0;                    // used in setting up the experiment
-    ValueStatus vs;
+    ValueStatus vs = valueMissing;
     int nSteps = 0;
     double hh = h;
     Element *defaultExp;
