@@ -30,7 +30,7 @@ foreach (MODEL_NAME bouncingBall dq inc values vanDerPol)
 
 set(TARGET_NAME ${MODEL_NAME}_${FMI_VERSION}_${FMI_TYPE})
 
-add_library(${TARGET_NAME} SHARED fmu${FMI_VERSION}/src/models/${MODEL_NAME}/${MODEL_NAME}.c)
+add_library(${TARGET_NAME} SHARED fmu${FMI_VERSION}/src/models/${MODEL_NAME}/${MODEL_NAME}.c fmu${FMI_VERSION}/src/models/${MODEL_NAME}/modelDescription_${FMI_TYPE}.xml)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dist/fmi${FMI_VERSION}/${FMI_TYPE})
 
