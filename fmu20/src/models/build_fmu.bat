@@ -14,7 +14,7 @@ echo building FMU %2 - FMI for Model Exchange 2.0
 
 rem save env variable settings
 set PREV_PATH=%PATH%
-if defined INCLUDE set PREV_INCLUDE=%INLUDE%
+if defined INCLUDE set PREV_INCLUDE=%INCLUDE%
 if defined LIB     set PREV_LIB=%LIB%
 if defined LIBPATH set PREV_LIBPATH=%LIBPATH%
 
@@ -85,7 +85,7 @@ if exist temp rmdir /S /Q temp
 
 rem undo variable settings performed by vsvars32.bat
 set PATH=%PREV_PATH%
-if defined PREV_INCLUDE set INCLUDE=%PREV_INLUDE%
+if defined PREV_INCLUDE set INCLUDE=%PREV_INCLUDE%
 if defined PREV_LIB     set LIB=%PREV_LIB%
 if defined PREV_LIBPATH set LIBPATH=%PREV_LIBPATH%
 echo done.
