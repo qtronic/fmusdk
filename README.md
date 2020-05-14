@@ -3,7 +3,7 @@
 
 # FMU SDK
 
-The FMU SDK is a free software development kit provided by [QTronic](https://www.qtronic.de/). It demonstrates basic use of Functional Mockup Units (FMUs) as defined by the following Functional Mock-up Interface specifications for
+The FMU SDK is a free software development kit provided by [Synopsys](https://www.synopsys.com/). It demonstrates basic use of Functional Mockup Units (FMUs) as defined by the following Functional Mock-up Interface specifications for
 
 - [Model Exchange and Co-Simulation 2.0](https://svn.modelica.org/fmi/branches/public/specifications/v2.0/FMI_for_ModelExchange_and_CoSimulation_v2.0.pdf) (July 25, 2014)
 - [Model Exchange 1.0](https://svn.modelica.org/fmi/branches/public/specifications/v1.0/FMI_for_ModelExchange_v1.0.pdf) (January 26, 2010)
@@ -182,7 +182,7 @@ For the case of FMU 2.0, see the corresponding overview figure in the [FMI speci
 
 ## License
 
-The FMU SDK is provided by QTronic under the [BSD 2-Clause License](LICENSE.md).
+The FMU SDK is provided by Synopsys under the [BSD 2-Clause License](LICENSE.md).
 
 The following additional tools are distributed with the FMU SDK under their respective licenses:
 
