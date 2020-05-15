@@ -22,9 +22,9 @@ if [ ! -d $directory ]; then
 fi
 
 if [ "$csOrMe" = "cs" ]; then
-   csOrMeInclude="-DFMI_COSIMULATION -I../../co_simulation/include"
+   csOrMeInclude="-DFMI_COSIMULATION -I../../co_simulation/include -I../../shared/include"
 else
-   csOrMeInclude=-I../../model_exchange/include
+   csOrMeInclude="-I../../model_exchange/include -I../../shared/include"
 fi
 
 case "`uname -s`" in
