@@ -161,6 +161,7 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
         comp->isPositive = (fmi2Boolean *)functions->allocateMemory(NUMBER_OF_EVENT_INDICATORS,
             sizeof(fmi2Boolean));
         comp->instanceName = (char *)functions->allocateMemory(1 + strlen(instanceName), sizeof(char));
+		comp->fmuResourceLocation = (char *)functions->allocateMemory(1 + strlen(fmuResourceLocation), sizeof(char));
         comp->GUID = (char *)functions->allocateMemory(1 + strlen(fmuGUID), sizeof(char));
 
         // set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
@@ -177,6 +178,7 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
     }
     comp->time = 0; // overwrite in fmi2SetupExperiment, fmi2SetTime
     strcpy((char *)comp->instanceName, (char *)instanceName);
+	strcpy((char *)comp->fmuResourceLocation, (char *)fmuResourceLocation);
     comp->type = fmuType;
     strcpy((char *)comp->GUID, (char *)fmuGUID);
     comp->functions = functions;
