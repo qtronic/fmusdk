@@ -80,13 +80,22 @@ This unzips the given FMU, parses the contained modelDescription.xml file, simul
 Example command:
 
 ```
-fmusim me10 fmu10/fmu/me/bouncingBall.fmu 5 0.1 0 s
-FMU Simulator: run 'fmu/bouncingBall.fmu' from t=0..5 with step size h=0.1, loggingOn=0, csv separator=';'
+fmusim me10 fmu10/fmu/me/win32/bouncingBall.fmu 5 0.1 0 s
+
+parse C:\Users\tirea\AppData\Local\Temp\fmu\modelDescription.xml
+fmiModelDescription
+  fmiVersion=1.0
+  modelName=bouncingBall
+  modelIdentifier=bouncingBall
+  guid={8c4e810f-3df3-4a00-8276-176fa3c9f003}
+  numberOfContinuousStates=2
+  numberOfEventIndicators=1
+FMU Simulator: run 'fmu10/fmu/me/win32/bouncingBall.fmu' from t=0..5 with step size h=0.1, loggingOn=0, csv separator=';'
 Simulation from 0 to 5 terminated successful
   steps ............ 51
   fixed step size .. 0.1
   time events ...... 0
-  state events ..... 14
+  state events ..... 10
   step events ...... 0
 CSV file 'result.csv' written
 ```
