@@ -18,6 +18,8 @@
  *  09.07.2014 track all states of Model-exchange and Co-simulation and check
  *             the allowed calling sequences, explicit isTimeEvent parameter for
  *             eventUpdate function of the model, lazy computation of computed values.
+ *  07.05.2021 https://github.com/qtronic/fmusdk issue #6: allow NULL vector argument
+ *             for FMI functions when there are zero states
  *
  * Author: Adrian Tirea
  * Copyright QTronic GmbH. All rights reserved.

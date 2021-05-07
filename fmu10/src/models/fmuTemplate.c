@@ -18,6 +18,8 @@
  *  02.08.2013 fixed a bug in instantiateModel reported by Markus Ende, TH Nuernberg
  *  02.04.2014 better time event handling
  *  02.06.2014 copy instanceName and GUID at instantiation
+ *  07.05.2021 https://github.com/qtronic/fmusdk issue #6: allow NULL vector argument
+ *             for FMI functions when there are zero states
  *
  * Copyright QTronic GmbH. All rights reserved.
  * ---------------------------------------------------------------------------*/
