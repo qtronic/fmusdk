@@ -18,6 +18,8 @@
  *  09.07.2014 track all states of Model-exchange and Co-simulation and check
  *             the allowed calling sequences, explicit isTimeEvent parameter for
  *             eventUpdate function of the model, lazy computation of computed values.
+ *  07.05.2021 https://github.com/qtronic/fmusdk issue #6: allow NULL vector argument
+ *             for FMI functions when there are zero states
  *
  * Author: Adrian Tirea
  * Copyright QTronic GmbH. All rights reserved.
@@ -27,7 +29,7 @@
 extern "C" {
 #endif
 
-// macro to be used to log messages. The macro check if current 
+// macro to be used to log messages. The macro check if current
 // log category is valid and, if true, call the logger provided by simulator.
 #define FILTERED_LOG(instance, status, categoryIndex, message, ...) if (status == fmi2Error || status == fmi2Fatal || isCategoryLogged(instance, categoryIndex)) \
         instance->functions->logger(instance->functions->componentEnvironment, instance->instanceName, status, \
@@ -839,7 +841,7 @@ fmi2Status fmi2SetContinuousStates(fmi2Component c, const fmi2Real x[], size_t n
         return fmi2Error;
     if (invalidNumber(comp, "fmi2SetContinuousStates", "nx", nx, NUMBER_OF_STATES))
         return fmi2Error;
-    if (nullPointer(comp, "fmi2SetContinuousStates", "x[]", x))
+    if (nx > 0 && nullPointer(comp, "fmi2SetContinuousStates", "x[]", x))
         return fmi2Error;
 #if NUMBER_OF_STATES>0
     for (i = 0; i < nx; i++) {
@@ -860,7 +862,7 @@ fmi2Status fmi2GetDerivatives(fmi2Component c, fmi2Real derivatives[], size_t nx
         return fmi2Error;
     if (invalidNumber(comp, "fmi2GetDerivatives", "nx", nx, NUMBER_OF_STATES))
         return fmi2Error;
-    if (nullPointer(comp, "fmi2GetDerivatives", "derivatives[]", derivatives))
+    if (nx > 0 && nullPointer(comp, "fmi2GetDerivatives", "derivatives[]", derivatives))
         return fmi2Error;
 #if NUMBER_OF_STATES>0
     for (i = 0; i < nx; i++) {
@@ -879,6 +881,8 @@ fmi2Status fmi2GetEventIndicators(fmi2Component c, fmi2Real eventIndicators[], s
         return fmi2Error;
     if (invalidNumber(comp, "fmi2GetEventIndicators", "ni", ni, NUMBER_OF_EVENT_INDICATORS))
         return fmi2Error;
+    if (ni > 0 && nullPointer(comp, "fmi2GetEventIndicators", "eventIndicators[]", eventIndicators))
+        return fmi2Error;
 #if NUMBER_OF_EVENT_INDICATORS>0
     for (i = 0; i < ni; i++) {
         eventIndicators[i] = getEventIndicator(comp, i); // to be implemented by the includer of this file
@@ -895,7 +899,7 @@ fmi2Status fmi2GetContinuousStates(fmi2Component c, fmi2Real states[], size_t nx
         return fmi2Error;
     if (invalidNumber(comp, "fmi2GetContinuousStates", "nx", nx, NUMBER_OF_STATES))
         return fmi2Error;
-    if (nullPointer(comp, "fmi2GetContinuousStates", "states[]", states))
+    if (nx > 0 && nullPointer(comp, "fmi2GetContinuousStates", "states[]", states))
         return fmi2Error;
 #if NUMBER_OF_STATES>0
     for (i = 0; i < nx; i++) {
@@ -914,7 +918,7 @@ fmi2Status fmi2GetNominalsOfContinuousStates(fmi2Component c, fmi2Real x_nominal
         return fmi2Error;
     if (invalidNumber(comp, "fmi2GetNominalContinuousStates", "nx", nx, NUMBER_OF_STATES))
         return fmi2Error;
-    if (nullPointer(comp, "fmi2GetNominalContinuousStates", "x_nominal[]", x_nominal))
+    if (nx > 0 && nullPointer(comp, "fmi2GetNominalContinuousStates", "x_nominal[]", x_nominal))
         return fmi2Error;
     FILTERED_LOG(comp, fmi2OK, LOG_FMI_CALL, "fmi2GetNominalContinuousStates: x_nominal[0..%d] = 1.0", nx-1)
     for (i = 0; i < nx; i++)

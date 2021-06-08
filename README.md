@@ -22,9 +22,9 @@ For bug reports, questions or contributions regarding the FMU SDK, please follow
 
 The FMU SDK runs on all 32 bit and 64 bit Windows platforms, Linux and Mac OS X platforms. Download the FMU SDK from here, and unzip the file in a directory where you have write access. That directory is called FMUSDK_HOME below and may contain white space, such as in `C:/Program Files/fmusdk`. The FMU SDK contains only the C sources of the FMUs and the simulators, not the executables, and should compile on all Windows, Linux and Mac OS X platforms.
 
-To build Windows 32 bit versions of all FMUs and simulators of the FMU SDK, double click on `FMUSDK_HOME/install.bat`. This should create fmus in `FMUSDK_HOME/fmu10/fmu and FMUSDK_HOME/fmu20/fmu`, as well as four simulators in `FMUSDK_HOME/fmu10/bin and FMUSDK_HOME/fmu20/bin`.
+To build Windows 32 bit versions of all FMUs and simulators of the FMU SDK, double click on `FMUSDK_HOME/install.bat`. This should create fmus in `FMUSDK_HOME/fmu10/fmu and FMUSDK_HOME/fmu20/fmu`, as well as four simulators in `FMUSDK_HOME/fmu10/bin/win32` and `FMUSDK_HOME/fmu20/bin/win32`.
 
-To build Windows 64 bit versions of all FMUs and simulators, open a command shell and run `install -win64`. This creates additional fmus in the `x64` subdirectories in `FMUSDK_HOME/fmu10/fmu` and `FMUSDK_HOME/fmu20/fmu`, as well as additional simulators in `FMUSDK_HOME/fmu10/bin/x64` and `FMUSDK_HOME/fmu20/bin/x64`. Building these 64 bit versions works also on 32 bit Windows platforms. Execution of the 64 bit simulators and fmus requires however a 64 bit version of Windows.
+To build Windows 64 bit versions of all FMUs and simulators, open a command shell and run `install -win64`. This creates additional fmus in the `win64` subdirectories in `FMUSDK_HOME/fmu10/fmu` and `FMUSDK_HOME/fmu20/fmu`, as well as additional simulators in `FMUSDK_HOME/fmu10/bin/win64` and `FMUSDK_HOME/fmu20/bin/win64`. Building these 64 bit versions works also on 32 bit Windows platforms. Execution of the 64 bit simulators and fmus requires however a 64 bit version of Windows.
 
 Compilation using install.bat requires that you have installed one of Microsoft Visual Studio 2005 (VS8), 2008 (VS9), 2010 (VS10), 2012 (VS11), 2013 (VS12) or 2015 (VS14), for example the free Express Edition. To compile with another compiler, adapt the batch files.
 
@@ -80,13 +80,22 @@ This unzips the given FMU, parses the contained modelDescription.xml file, simul
 Example command:
 
 ```
-fmusim me10 fmu10/fmu/me/bouncingBall.fmu 5 0.1 0 s
-FMU Simulator: run 'fmu/bouncingBall.fmu' from t=0..5 with step size h=0.1, loggingOn=0, csv separator=';'
+fmusim me10 fmu10/fmu/me/win32/bouncingBall.fmu 5 0.1 0 s
+
+parse C:\Users\tirea\AppData\Local\Temp\fmu\modelDescription.xml
+fmiModelDescription
+  fmiVersion=1.0
+  modelName=bouncingBall
+  modelIdentifier=bouncingBall
+  guid={8c4e810f-3df3-4a00-8276-176fa3c9f003}
+  numberOfContinuousStates=2
+  numberOfEventIndicators=1
+FMU Simulator: run 'fmu10/fmu/me/win32/bouncingBall.fmu' from t=0..5 with step size h=0.1, loggingOn=0, csv separator=';'
 Simulation from 0 to 5 terminated successful
   steps ............ 51
   fixed step size .. 0.1
   time events ...... 0
-  state events ..... 14
+  state events ..... 10
   step events ...... 0
 CSV file 'result.csv' written
 ```
