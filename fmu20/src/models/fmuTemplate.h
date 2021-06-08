@@ -152,6 +152,7 @@ typedef struct {
 
     fmi2Real time;
     fmi2String instanceName;
+    fmi2String fmuResourceLocation;
     fmi2Type type;
     fmi2String GUID;
     const fmi2CallbackFunctions *functions;
