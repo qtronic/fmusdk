@@ -1,3 +1,9 @@
+----------
+
+**This repository has been archived. Development is continued on [modelica/Reference-FMUs](https://github.com/modelica/Reference-FMUs).**
+
+----------
+
 [![Travis CI](https://travis-ci.org/qtronic/fmusdk.svg?branch=master)](https://travis-ci.org/qtronic/fmusdk)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/bq2uvq0sm3w8v5u0?svg=true)](https://ci.appveyor.com/project/adriantirea/fmusdk)
 
