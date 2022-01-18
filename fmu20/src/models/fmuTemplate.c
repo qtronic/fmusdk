@@ -127,7 +127,7 @@ fmi2Boolean isCategoryLogged(ModelInstance *comp, int categoryIndex) {
 fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2String fmuGUID,
                             fmi2String fmuResourceLocation, const fmi2CallbackFunctions *functions,
                             fmi2Boolean visible, fmi2Boolean loggingOn) {
-    // ignoring arguments: fmuResourceLocation, visible
+    // ignoring arguments: visible
     ModelInstance *comp;
     if (!functions->logger) {
         return NULL;
@@ -141,6 +141,11 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
     if (!instanceName || strlen(instanceName) == 0) {
         functions->logger(functions->componentEnvironment, "?", fmi2Error, "error",
                 "fmi2Instantiate: Missing instance name.");
+        return NULL;
+    }
+    if (!fmuResourceLocation || strlen(fmuResourceLocation) == 0) {
+        functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
+                "fmi2Instantiate: Missing Resource Location.");
         return NULL;
     }
     if (!fmuGUID || strlen(fmuGUID) == 0) {
@@ -163,6 +168,7 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
         comp->isPositive = (fmi2Boolean *)functions->allocateMemory(NUMBER_OF_EVENT_INDICATORS,
             sizeof(fmi2Boolean));
         comp->instanceName = (char *)functions->allocateMemory(1 + strlen(instanceName), sizeof(char));
+		comp->fmuResourceLocation = (char *)functions->allocateMemory(1 + strlen(fmuResourceLocation), sizeof(char));
         comp->GUID = (char *)functions->allocateMemory(1 + strlen(fmuGUID), sizeof(char));
 
         // set all categories to on or off. fmi2SetDebugLogging should be called to choose specific categories.
@@ -171,7 +177,7 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
         }
     }
     if (!comp || !comp->r || !comp->i || !comp->b || !comp->s || !comp->isPositive
-        || !comp->instanceName || !comp->GUID) {
+        || !comp->instanceName || !comp->fmuResourceLocation || !comp->GUID) {
 
         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, "error",
             "fmi2Instantiate: Out of memory.");
@@ -179,6 +185,7 @@ fmi2Component fmi2Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2Str
     }
     comp->time = 0; // overwrite in fmi2SetupExperiment, fmi2SetTime
     strcpy((char *)comp->instanceName, (char *)instanceName);
+	strcpy((char *)comp->fmuResourceLocation, (char *)fmuResourceLocation);
     comp->type = fmuType;
     strcpy((char *)comp->GUID, (char *)fmuGUID);
     comp->functions = functions;
@@ -287,6 +294,7 @@ void fmi2FreeInstance(fmi2Component c) {
     }
     if (comp->isPositive) comp->functions->freeMemory(comp->isPositive);
     if (comp->instanceName) comp->functions->freeMemory((void *)comp->instanceName);
+    if (comp->fmuResourceLocation) comp->functions->freeMemory((void *)comp->fmuResourceLocation);
     if (comp->GUID) comp->functions->freeMemory((void *)comp->GUID);
     comp->functions->freeMemory(comp);
 }
